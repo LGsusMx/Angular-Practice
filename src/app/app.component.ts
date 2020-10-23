@@ -19,6 +19,6 @@ export class AppComponent {
     this.recurso = url;
   }
   outUserMethod(user: IUser): void{
-console.log(user);
+    console.log(user);
   }
 }

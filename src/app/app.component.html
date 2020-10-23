@@ -1,3 +1,22 @@
-<h1>Aplicacion {{title}} practica de repaso</h1>
+<h1>Hola mundo {{title}}</h1>
+
+<input [(ngModel)]="title">
+<img [src]="recurso">
+<button (click)="onImageC('./../assets/images/h.png')">Imagen 1</button>
+<button (click)="onImageC('./../assets/images/thegame.png')">Imagen 2</button>
+<button (click)="onImageC('./../assets/images/mapa.png')">Imagen 3</button>
+<button (click)="title = 'otro Titulo'">Otro titulo</button>
+<app-componente *ngFor='let item of items'></app-componente>
+
+<p [ngClass]="{'color':addClass}">owo</p>
+<button (click)="addClass = !addClass;">Agregar Clase</button>
+
+
+<p [ngStyle]="{'background-color':addClass ? 'red':'blue'}">
+  otro owo
+</p>
+
+<app-user *ngFor='let item of itemsx' [user]='item' (outUser)='outUserMethod($event)'></app-user>
+
 
 <app-card *ngFor='let item of itemsc' [user]='item' (outUser)='outUserMethod($event)'></app-card>
