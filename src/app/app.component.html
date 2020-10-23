@@ -1,22 +1,66 @@
-<h1>Hola mundo {{title}}</h1>
+<div class="container">
+	<form id="contact" [formGroup]="group">
+		<h3>Practica Reactive Form</h3>
+		<h4>Ingresa los siguientes datos...</h4>
 
-<input [(ngModel)]="title">
-<img [src]="recurso">
-<button (click)="onImageC('./../assets/images/h.png')">Imagen 1</button>
-<button (click)="onImageC('./../assets/images/thegame.png')">Imagen 2</button>
-<button (click)="onImageC('./../assets/images/mapa.png')">Imagen 3</button>
-<button (click)="title = 'otro Titulo'">Otro titulo</button>
-<app-componente *ngFor='let item of items'></app-componente>
+		<fieldset>
+			<input formControlName="name" placeholder="Nombre" type="text">
+			<div *ngIf="group.get('name').invalid && group.get('name').dirty">
+				<p *ngIf="group.get('name').getError('required')">
+					{{ getError('name', 'required', 'Campo requerido.') }}
+				</p>
+			</div>
+    </fieldset>
 
-<p [ngClass]="{'color':addClass}">owo</p>
-<button (click)="addClass = !addClass;">Agregar Clase</button>
+    <fieldset>
+			<input formControlName="apellido" placeholder="Apellido" type="text">
+			<div *ngIf="group.get('apellido').invalid && group.get('apellido').dirty">
+				<p *ngIf="group.get('apellido').getError('required')">
+					{{ getError('apellido', 'required', 'Campo requerido.') }}
+				</p>
+			</div>
+		</fieldset>
 
+		<fieldset>
+			<input formControlName="edad" placeholder="Edad" type="number">
+			<div *ngIf="group.get('edad').invalid && group.get('edad').dirty">
+				<p *ngIf="group.get('edad').getError('required')"> Campo requerido. </p>
+        <p *ngIf="group.get('edad').getError('minima')"> No eres mayor de edad </p>
+        <p *ngIf="group.get('edad').getError('number')"> El valor debe ser numerico </p>
+			</div>
+    </fieldset>
 
-<p [ngStyle]="{'background-color':addClass ? 'red':'blue'}">
-  otro owo
-</p>
+		<fieldset formArrayName="comentarios">
+			<div *ngFor="let comentarios of getcomentarios(); index as addressIndex;">
+				<div [formGroupName]="addressIndex">
+					<fieldset>
+            <input formControlName="comentario" placeholder="comentario" type="text">
+            <button class="remove-button" (click)="onRemovecomentarios(addressIndex)">Remover</button>
+          </fieldset>
+				</div>
+			</div>
+			<button class="add-button" (click)="onAddcomentarios()">Agregar comentario</button>
+		</fieldset>
+    <fieldset >
 
-<app-user *ngFor='let item of itemsx' [user]='item' (outUser)='outUserMethod($event)'></app-user>
-
-
-<app-card *ngFor='let item of itemsc' [user]='item' (outUser)='outUserMethod($event)'></app-card>
+      <div>
+        <a>Genero:</a>
+        <input [(ngModel)]="setzo" id="male" type="radio" value="male" name="gender" formControlName="gender" style="margin: 8px;">Masculino
+        <input [(ngModel)]="setzo" id="female" type="radio" value="female" name="gender" formControlName="gender" style="margin: 8px;">Femenino
+        <input [(ngModel)]="setzo" id="other" type="radio" value="other" name="gender" formControlName="gender" style="margin: 8px;">Otro
+     </div>
+    </fieldset>
+    <fieldset>
+      <a>Estado civil:</a>
+      <select name="estadocivil" style="margin: 20px;">
+        <option>Soltero</option>
+        <option>Casado</option>
+        <option>Divorciado</option>
+        <option>Otro</option>
+      </select>
+    </fieldset>
+		<fieldset>
+			<button (click)="onClickGroup()" type="submit" name="submit"  id="contact-submit">Enviar</button>
+		</fieldset>
+	</form>
+</div>

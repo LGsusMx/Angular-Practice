@@ -1,24 +1,81 @@
-import { Component} from '@angular/core';
-import { IUser, IUserCard } from './interfaces/user.interface';
-
+import { Component } from '@angular/core';
+import {
+  FormControl,
+  Validators,
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  AbstractControl,
+} from '@angular/forms';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent {
-  title = 'salleAppv1';
-  addClass = false;
-  recurso = './../assets/images/thegame.png';
-  items = [1, 2, 3, 4, 5, 6, 7];
-  itemsx: IUser[] = [{name: 'owo', id: 1}, {name: 'uwu', id: 2}, {name: 'ewe', id: 3}];
-  itemsc: IUserCard[] = [{name: 'Jesus Ramirez', id: 1, imagen: '../../assets/images/jesus.jpg'}, {name: 'Jonathan Muñoz', id: 2, imagen: '../../assets/images/jonathan.jpg'},
-  {name: 'Daniel Torres', id: 3, imagen: '../../assets/images/Daniel.png'}, {name: 'Gerardo Cabrera', id: 4, imagen: '../../assets/images/Gerardo.jpg'}];
-  onImageC(url: string): void{
-    this.recurso = url;
+
+  constructor(private builder: FormBuilder) {
+
   }
-  outUserMethod(user: IUser): void{
-    console.log(user);
+  formBuilder: FormGroup;
+  group: FormGroup = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    apellido: new FormControl('', [Validators.required]),
+    edad: new FormControl('', [Validators.required, this.validateAge]),
+    gender: new FormControl( ['']),
+    comentarios: new FormArray([
+      new FormGroup({
+        comentario: new FormControl('')
+      }),
+    ]),
+  });
+  setzo = 'male';
+  onClickGroup(): void {
+    if (this.group.valid) {
+      alert('FORMULARIO CORRECTO');
+    } else {
+      alert('FORMULARIO ERRONEO');
+    }
+  }
+  onAddcomentarios(): void  {
+    (this.group.get('comentarios') as FormArray).push(
+      new FormGroup({
+        comentario: new FormControl('')
+      })
+    );
+  }
+
+  getcomentarios() {
+    return (this.group.get('comentarios') as FormArray).controls;
+  }
+
+  onRemovecomentarios(index: number): void {
+    (this.group.get('comentarios') as FormArray).removeAt(index);
+  }
+
+  validateAge(control: AbstractControl) {
+    const value = control.value;
+    let error = null;
+    if (!parseInt(value, 16)) {
+      error = { ...error, number: 'El valor debería ser un número' };
+    }
+    else
+    if (value < 18 ) {
+      error = { ...error, minima: 'Debes tener al menos 18 años' };
+    }
+    return error;
+  }
+
+  /**
+   * NO QUEREMOS TENER TANTA FUNCIONALIDAD EN LAS VISTAS
+   * POR ESO ES MEJOR SACAR ESA FUNCIONALIDAD A UNA FUNCION Y LUEGO LLAMARLA
+   */
+  getError(controlName: string, key: string, value: string): string {
+    let error = '';
+    const control = this.group.get(controlName);
+    if (control.dirty && control.errors[key]) {
+      error = value;
+    }
+    return error;
   }
 }
